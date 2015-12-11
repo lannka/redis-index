@@ -1,0 +1,27 @@
+{
+  "name": "redisindex",
+  "version": "0.0.1",
+  "description": "A Redis based minimal search indexer.",
+  "keywords": [ "redis", "search", "index" ],
+  "author": {
+    "name": "Hongfei Ding",
+    "email": "hungfei.ding@gmail.com"
+  },
+  "license": "MIT",
+  "main": "./index.js",
+  "scripts": {
+    "test": "node ./test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/lannka/redis-index.git"
+  },
+  "dependencies": {
+    "async": "^1.5.0",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "fakeredis": "^1.0.1",
+    "tape": "^4.2.2"
+  }
+}
