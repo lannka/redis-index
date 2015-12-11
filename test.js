@@ -5,7 +5,7 @@ var RedisIndex = require('./index.js'),
 var indexer = new RedisIndex({ redisClient: fakeRedis });
 
 test('Index a doc', function (t) {
-  t.plan(3);
+  t.plan(7);
   indexer.index('001', 'hello world!', function() {
     indexer.search('hello', function(err, docIds) {
       t.deepEqual(docIds, ['001'], 'matched query');
@@ -15,8 +15,24 @@ test('Index a doc', function (t) {
       t.deepEqual(docIds, [], 'unmatched query');
     });
 
+    indexer.search('', function(err, docIds) {
+      t.deepEqual(docIds, [], 'empty query');
+    });
+
+    indexer.search(' ', function(err, docIds) {
+      t.deepEqual(docIds, [], 'white space query');
+    });
+
     indexer.match('h', function(err, keywords) {
       t.deepEqual(keywords, ['hello'], 'prefix matched keywords');
+    });
+
+    indexer.match('', function(err, keywords) {
+      t.deepEqual(keywords, [], 'empty prefix');
+    });
+
+    indexer.match('  ', function(err, keywords) {
+      t.deepEqual(keywords, [], 'white space prefix');
     });
   });
 });
@@ -132,6 +148,8 @@ test('Tokenizer', function (t) {
   t.deepEqual(indexer.tokenize("I'm yours!"), ['i', 'm', 'yours']);
   t.deepEqual(indexer.tokenize(" 美好，的（世界），哈哈。你好 "), ['美好', '的', '世界', '哈哈', '你好']);
   t.deepEqual(indexer.tokenize("《美好》的“世界”‘哈　哈’【你好】"), ['美好', '的', '世界', '哈', '哈', '你好']);
+  t.deepEqual(indexer.tokenize("   "), []);
+  t.deepEqual(indexer.tokenize("! - ,   "), []);
 
   t.end();
 });
