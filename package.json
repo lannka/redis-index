@@ -1,8 +1,8 @@
 {
   "name": "redisindex",
-  "version": "0.1.0",
-  "description": "A Redis based minimal search indexer.",
-  "keywords": [ "redis", "search", "index" ],
+  "version": "0.2.0",
+  "description": "A Redis based minimal search indexer for NodeJS.",
+  "keywords": [ "redis", "search", "index", "node", "nodejs", "javascript" ],
   "author": {
     "name": "Hongfei Ding",
     "email": "hungfei.ding@gmail.com"

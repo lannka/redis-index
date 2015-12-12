@@ -1,8 +1,8 @@
 # RedisIndex.js
 
-RedisIndex is a [Redis](http://redis.io) based minimal search indexer.
+RedisIndex is a [Redis](http://redis.io) based minimal search indexer for NodeJS.
 
-##API
+## API
 Check test.js for more examples.
 
 ### Install
@@ -54,17 +54,6 @@ the same way as the document content. The IDs of documents matching all the keyw
 indexer.search('hello world', function(err, docIds) {
   docIds.forEach(function(docId) {
     console.log(docId);
-  });
-});
-```
-
-### Match
-Use `match` to find all the keywords prefix matching the given query.
-
-```javascript
-indexer.match('hell', function(err, keywords) {
-  keywords.forEach(function(kw) {
-    console.log(kw);
   });
 });
 ```

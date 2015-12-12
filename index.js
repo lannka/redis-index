@@ -81,38 +81,6 @@ RedisIndex.prototype.search = function(query, callback) {
       callback);
 };
 
-/**
- * Returns an array of all the keywords matching the given query as prefix.
- */
-RedisIndex.prototype.match = function(query, callback) {
-  var q = query.trim();
-  if (q.length === 0) {
-    return callback(null, []);
-  }
-  var indexer = this;
-  var cursor = 0;
-  var keys = [];
-  async.doUntil(
-      function(iterCallback) {
-        var matchPattern = indexer.buildKeywordKey(q.toLowerCase()) + '*';
-        indexer.redisClient.scan([cursor, 'match', matchPattern], function(err, reply) {
-          if (err) return iterCallback(err);
-          cursor = parseInt(reply[0]);
-          keys = keys.concat(_.map(reply[1], function(key) {
-            return key.substr(indexer.keyPrefix.length + 3);
-          }));
-          iterCallback();
-        });
-      },
-      function() {
-        return cursor === 0;
-      },
-      function(err) {
-        callback(err, keys);
-      }
-  );
-};
-
 RedisIndex.prototype.tokenize = function(str) {
   return _.compact(str.toLowerCase()
       .split(/[\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~ 　～·！＠＃￥％…＆×－—＝＋、，。｜？《》；：｛｝（）“”‘’【】]/));

@@ -5,7 +5,7 @@ var RedisIndex = require('./index.js'),
 var indexer = new RedisIndex({ redisClient: fakeRedis });
 
 test('Index a doc', function (t) {
-  t.plan(7);
+  t.plan(4);
   indexer.index('001', 'hello world!', function() {
     indexer.search('hello', function(err, docIds) {
       t.deepEqual(docIds, ['001'], 'matched query');
@@ -22,23 +22,11 @@ test('Index a doc', function (t) {
     indexer.search(' ', function(err, docIds) {
       t.deepEqual(docIds, [], 'white space query');
     });
-
-    indexer.match('h', function(err, keywords) {
-      t.deepEqual(keywords, ['hello'], 'prefix matched keywords');
-    });
-
-    indexer.match('', function(err, keywords) {
-      t.deepEqual(keywords, [], 'empty prefix');
-    });
-
-    indexer.match('  ', function(err, keywords) {
-      t.deepEqual(keywords, [], 'white space prefix');
-    });
   });
 });
 
 test('Re-index a doc', function (t) {
-  t.plan(3);
+  t.plan(2);
   indexer.index('001', 'halo world!', function() {
     indexer.search('halo', function (err, docIds) {
       t.deepEqual(docIds, ['001'], 'matched query');
@@ -47,15 +35,11 @@ test('Re-index a doc', function (t) {
     indexer.search('hello', function (err, docIds) {
       t.deepEqual(docIds, [], 'unmatched query');
     });
-
-    indexer.match('H', function(err, keywords) {
-      t.deepEqual(keywords, ['halo'], 'prefix matched keywords');
-    });
   });
 });
 
 test('Index another doc', function (t) {
-  t.plan(3);
+  t.plan(2);
   indexer.index('002', 'hooray world!', function() {
     indexer.search('world', function (err, docIds) {
       t.deepEqual(docIds, ['001', '002'], 'query matches 2 docs');
@@ -64,22 +48,14 @@ test('Index another doc', function (t) {
     indexer.search('hooray', function (err, docIds) {
       t.deepEqual(docIds, ['002'], 'query matches 1 doc');
     });
-
-    indexer.match('h', function(err, keywords) {
-      t.deepEqual(keywords, ['halo', 'hooray'], 'prefix matched keywords');
-    });
   });
 });
 
 test('Remove a doc', function (t) {
-  t.plan(2);
+  t.plan(1);
   indexer.remove('001', function() {
     indexer.search('halo', function (err, docIds) {
       t.deepEqual(docIds, [], 'unmatched query');
-    });
-
-    indexer.match('H', function(err, keywords) {
-      t.deepEqual(keywords, ['hooray'], 'prefix matched keywords');
     });
   });
 });
@@ -91,27 +67,19 @@ test('Remove a non-existing doc', function (t) {
 });
 
 test('Add a new doc', function (t) {
-  t.plan(2);
+  t.plan(1);
   indexer.add('004', 'Awesome...world', function() {
     indexer.search('awesome', function (err, docIds) {
       t.deepEqual(docIds, ['004'], 'matched query');
-    });
-
-    indexer.match('awe', function(err, keywords) {
-      t.deepEqual(keywords, ['awesome'], 'prefix matched keywords');
     });
   });
 });
 
 test('Add to existing doc', function (t) {
-  t.plan(2);
+  t.plan(1);
   indexer.add('004', 'something awful', function() {
     indexer.search('awesome awful', function (err, docIds) {
       t.deepEqual(docIds, ['004'], 'matched query');
-    });
-
-    indexer.match('a', function(err, keywords) {
-      t.deepEqual(keywords, ['awesome', 'awful'], 'prefix matched keywords');
     });
   });
 });
